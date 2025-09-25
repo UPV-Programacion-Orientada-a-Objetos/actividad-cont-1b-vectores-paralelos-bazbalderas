@@ -16,10 +16,10 @@ using namespace std;
 int main() {
     
     // Inicialización de los vectores paralelos separados por sus diferentes funciones
-    int codigoProducto[100] = {}; 
-    string nombreProducto[100] = {""};
-    int cantidadProducto[100] = {};
-    float precioProducto[100] = {};
+    int codigoProducto[100] = {1, 2, 3, 4, 5}; 
+    string nombreProducto[100] = {"Tornillo", "Tuerca", "Mazo", "Martillo", "Cerrucho"};
+    int cantidadProducto[100] = {10, 12, 14, 6, 1};
+    float precioProducto[100] = {2.00, 1.50, 200.00, 250.00, 300.00};
     
     //Inicializamos el archivo.txt
     const string archivoInventario = "inventario.txt";
