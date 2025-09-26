@@ -1,40 +1,85 @@
-/**
-  Ferretería El Martillo de Said
-  1.0 Funcionalidades del Menú Principal:
-  2.0 Ingresar nuevo producto
-  3.0 Modificar productos
-  4.0 Ver productos
-  5.0 Buscar producto más caro
-  6.0 Salir
- */
+/*VALDACIONES QUE SE ME OCURREN AL TOQUE:
+Que solo acepte txt, y si no hay crea uno desde 0, esto para que no truene el programa
+*/
 
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 int main() {
     
     // Inicialización de los vectores paralelos separados por sus diferentes funciones
-    int codigoProducto[100] = {1, 2, 3, 4, 5}; 
-    string nombreProducto[100] = {"Tornillo", "Tuerca", "Mazo", "Martillo", "Cerrucho"};
-    int cantidadProducto[100] = {10, 12, 14, 6, 1};
-    float precioProducto[100] = {2.00, 1.50, 200.00, 250.00, 300.00};
+     int codigoProducto[100] = {}; 
+    string nombreProducto[100] = {""};
+    int cantidadProducto[100] = {};
+    float precioProducto[100] = {};
+    string ubicacionProducto[100] = {""};
     
-    //Inicializamos el archivo.txt
-    const string archivoInventario = "inventario.txt";
+    /*
+    string linea;//Inicializamos evariable linea para el manejo de archivos
+    string texto; //Variable para guardar un valor
+    */
 
     // Variable para el bucle while inicializado en false para que no termine el programa
     bool salir = false; 
 
 /*======================================================================================
-  1.1 - BUCLE PRINCIPAL DEL MENÚ
+BUCLE PRINCIPAL DEL MENÚ
 ======================================================================================*/
     
     // Bucle while que va a repetir el menú principal mientras no se presione el botón de salir
     // El símbolo ! nos dice que mientras salir siga siendo false se seguirá ejecutando, sino terminaría
     while (!salir) {
         
+        //Ejemplo de este video: https://www.youtube.com/watch?v=RBZidsPGkfs
+        /*
+        //llamamos al inventario en forma de variable
+        ifstream inventario("inventario.txt");
+
+        while(getline(inventario, linea)){ //Si queremos obtener todo el inventario leido hasta que se acabe se necesita un bucle while
+        //getline(inventario, linea); //EN cambio si solo queremos obtener del inventario la primera linea porque fue la unica que pedimos
+            texto = texto + linea + "\n"; //imprimir todos el documento respetando los saltos de linea
+    }
+        inventario.close(); //Buena práctica para cerrar el archivo y que no este comiendo memoria
+        cout << texto << endl; //Imprime todo el archivo
+        //cout << linea << endl; //Impresion de primera linea del inventario.txt
+
+        //Para ingresar valores dentro del inventario
+        ofstream inventario2("inventario.txt");
+        inventario2 << texto << "Nuevo producto gg\n"; //Para agregar un nuevo texto al texto que ya esta en el inventario, si no ponemos la variable texto, se eliminara todo lo demás
+        inventario2.close();*/
+
+        //Abrimos el archivo del inventario para lectura, esto para cargar todo lo que hay dentro
+        ifstream inventario("inventario.txt");
+
+        string linea;
+        while(getline(inventario, linea)){
+            int i = 0;
+            
+            //Lo que vamos a hacer va a ser separar las columnas mediante las comas, esto quiere decir que cada coma va a ser donde termine una columna y empieza la siguiente
+            stringstream ss(linea);
+            string campo; //Para ir almacenando cada campo temporal hasta que terminemos
+
+            //Leemos el txt mientras vamos ingresando los valores a los vectores
+            getline(ss, campo, '/');
+            codigoProducto[i] = stoi(campo); //Lo que hace stoi es trasnformar el texto en entero
+
+                        getline(ss, campo, '/');
+            nombreProducto[i] = campo;
+
+                        getline(ss, campo, '/');
+            cantidadProducto[i] = stoi(campo); 
+
+                        getline(ss, campo, '/');
+            precioProducto[i] = stof(campo); //Lo que hace stof es trasnformar el texto en un flotante
+
+                        getline(ss, campo, '/');
+            ubicacionProducto[i] = campo;
+
+            i++; //Para ir recorriendo todos los campos xd
+               }
         // Mostrar menú de opciones
         cout << "\n=========================================" << endl;
         cout << "    FERRETERIA EL MARTILLO DE SAID     " << endl;
@@ -54,19 +99,19 @@ int main() {
         cin >> opc;
 
 /*======================================================================================
-  1.2 - OPCIÓN 1: ALMACENAR PRODUCTO NUEVO
+OPCIÓN 1: ALMACENAR PRODUCTO NUEVO
 ======================================================================================*/
         
         if (opc == 1) {
             
-            /*------- 2.0 - Asignación de nombre al producto nuevo -------*/
+            /*------- Asignación de nombre al producto nuevo -------*/
             cout << "\n=== AGREGAR NUEVO PRODUCTO ===" << endl;
             cout << "Ingrese el nombre del producto: ";
             string nombreProductoNuevo;
             cin.ignore();  // Limpiar el buffer para usar getline
             getline(cin, nombreProductoNuevo);  // Permitir que el nombre tenga espacios
 
-            /*------- 2.1 - Asignar código de producto (automático o manual) -------*/
+            /*------- Asignar código de producto (automático o manual) -------*/
             int codigoProductoNuevo = 0;
             cout << "\n--- ASIGNACIÓN DE CÓDIGO ---" << endl;
             cout << "¿Prefieres que se asigne un código automático o prefieres asignarlo tú?" << endl;
@@ -108,17 +153,17 @@ int main() {
                 } while (codigoRepetido);  // Mientras el código sea repetido, seguirá pidiendo uno nuevo
             }
 
-            /*------- 2.2 - Asignar cantidad en stock del producto -------*/
+            /*------- Asignar cantidad en stock del producto -------*/
             cout << "\nIngrese la cantidad en stock: ";
             int cantidadProductoNuevo;
             cin >> cantidadProductoNuevo;
         
-            /*------- 2.3 - Asignar precio unitario del producto con decimales -------*/
+            /*------- Asignar precio unitario del producto con decimales -------*/
             cout << "Ingrese el precio del producto: $";
             float precioProductoNuevo;
             cin >> precioProductoNuevo;
 
-            /*------- 2.4 - Buscar espacio vacío para agregar el producto -------*/
+            /*------- Buscar espacio vacío para agregar el producto -------*/
             // Se crea una variable bool que será falsa hasta que se encuentre un espacio vacío
             // Cuando lo haga se transformará en verdadera para no dar más vueltas en el ciclo for
             bool agregado = false;
@@ -145,25 +190,25 @@ int main() {
         }
 
 /*======================================================================================
-  1.3 - OPCIÓN 2: GESTIONAR PRODUCTOS (MODIFICACIÓN O ELIMINACIÓN)
+OPCIÓN 2: GESTIONAR PRODUCTOS (MODIFICACIÓN O ELIMINACIÓN)
 ======================================================================================*/
         
         else if (opc == 2) {
             
-            /*------- 3.0 - Pedir código del producto para buscarlo y modificarlo -------*/
+            /*------- Pedir código del producto para buscarlo y modificarlo -------*/
             cout << "\n=== MODIFICAR PRODUCTO ===" << endl;
             cout << "Ingrese el código del producto a modificar: ";
             int buscarCodigo;
             cin >> buscarCodigo;
 
-            /*------- 3.1 - Buscar en el arreglo el código del producto -------*/
+            /*------- Buscar en el arreglo el código del producto -------*/
             bool productoEncontrado = false;
             for (int i = 0; i < 100; i++) {
                 if (codigoProducto[i] == buscarCodigo) {
                     productoEncontrado = true;
                     cout << "Producto encontrado: " << nombreProducto[i] << endl;
 
-            /*------- 3.2 - Menú de modificación del producto -------*/
+            /*------- Menú de modificación del producto -------*/
                     cout << "\n¿Qué desea modificar del producto?" << endl;
                     cout << "1. Nombre" << endl;
                     cout << "2. Cantidad" << endl;
@@ -221,12 +266,12 @@ int main() {
         }
 
 /*======================================================================================
-  1.4 - OPCIÓN 3: VER INVENTARIO DE PRODUCTOS
+OPCIÓN 3: VER INVENTARIO DE PRODUCTOS
 ======================================================================================*/
         
         else if (opc == 3) {
             
-            /*------- 4.0 - Opción para ver todo el inventario o buscar producto específico -------*/
+            /*------- Opción para ver todo el inventario o buscar producto específico -------*/
             cout << "---------------------------------------" << endl;
             cout << "¿Desea ver todo el inventario o buscar un producto específico?" << endl;
             cout << "1. Ver todo" << endl;
@@ -235,7 +280,7 @@ int main() {
             cin >> opc;
             
             if (opc == 1) {
-                /*------- 4.1 - Mostrar todo el inventario -------*/
+                /*------- Mostrar todo el inventario -------*/
                 cout << "Inventario: " << endl;
                 // Mediante un ciclo for se imprimen todos los productos hasta que se termine el arreglo
                 for (int i = 0; i < 100; i++) {
@@ -249,17 +294,17 @@ int main() {
                 }
             } 
             else if (opc == 2) {
-                /*------- 4.2 - Buscar un producto específico -------*/
+                /*------- Buscar un producto específico -------*/
                 cout << "Ingrese el código del producto a buscar: " << endl;
                 int buscarCodigo;
                 cin >> buscarCodigo;
 
-                /*------- 4.3 - Ciclo for para recorrer todo el array hasta encontrar coincidencia -------*/
+                /*------- Ciclo for para recorrer todo el array hasta encontrar coincidencia -------*/
                 // Variable bool para que mientras no se encuentre el código en el arreglo
                 // seguir recorriéndolo hasta encontrar una coincidencia
                 bool encontrado = false;
                 for (int i = 0; i < 100; i++) {
-                    /*------- 4.4 - Si el código buscado es igual a uno dentro del arreglo -------*/
+                    /*------- Si el código buscado es igual a uno dentro del arreglo -------*/
                     if (codigoProducto[i] == buscarCodigo) {
                         cout << "Producto encontrado: " << endl;
                         cout << "Nombre: " << nombreProducto[i] << endl;
@@ -281,18 +326,18 @@ int main() {
         }
 
 /*======================================================================================
-  1.5 - OPCIÓN 4: BUSCAR PRODUCTO MÁS CARO DEL INVENTARIO
+OPCIÓN 4: BUSCAR PRODUCTO MÁS CARO DEL INVENTARIO
 ======================================================================================*/
         
         else if(opc == 4) {
             
-            /*------- 5.0 - Algoritmo para encontrar el producto más caro -------*/
+            /*------- Algoritmo para encontrar el producto más caro -------*/
             float mayor = -1;      // Inicializamos mayor con un valor muy bajo
             int indexMayor = -1;   // Guardamos el índice del producto más caro
             
             // Ciclo for que recorre todo el arreglo
             for (int i = 0; i < 100; i++) {
-                /*------- 5.1 - Comparaciones hasta que se acabe el arreglo de precios -------*/
+                /*------- Comparaciones hasta que se acabe el arreglo de precios -------*/
                 // Cuando se termine, la variable mayor mostrará el precio más alto
                 if (precioProducto[i] > mayor) {
                     mayor = precioProducto[i];
@@ -309,18 +354,18 @@ int main() {
         }
 
 /*======================================================================================
-  1.6 - OPCIÓN 5: BUSCAR PRODUCTO MÁS BARATO DEL INVENTARIO
+OPCIÓN 5: BUSCAR PRODUCTO MÁS BARATO DEL INVENTARIO
 ======================================================================================*/
         
         else if(opc == 5) {
             
-            /*------- 6.0 - Algoritmo para encontrar el producto más barato -------*/
+            /*------- Algoritmo para encontrar el producto más barato -------*/
             float menor = -1;      // Inicializamos mayor con un valor muy bajo
             int indexMenor = -1;   // Guardamos el índice del producto más caro
             
             // Ciclo for que recorre todo el arreglo
             for (int i = 0; i < 100; i++) {
-                /*------- 5.1 - Comparaciones hasta que se acabe el arreglo de precios -------*/
+                /*------- Comparaciones hasta que se acabe el arreglo de precios -------*/
                 // Cuando se termine, la variable mayor mostrará el precio más alto
                 if (precioProducto[i] < menor) {
                     menor = precioProducto[i];
@@ -337,26 +382,29 @@ int main() {
         }
 
 /*======================================================================================
-  1.7 - OPCIÓN 6: GUARDAR CAMBIOS
+OPCIÓN 6: GUARDAR CAMBIOS
 ======================================================================================*/
 
          else if (opc == 6) {
 
-            /*------- 7.0 - Algoritmo para encontrar el producto más caro -------*/
+            /*------- Guardar inventario en archivo -------*/
             cout << "EL inventario ha sido guardado con éxito..." << endl;
             cout << "La verdad verdad, es que no se guardo con éxito, pero vamos a suponer que si..." << endl;
             salir = true;
         }
 /*======================================================================================
-  1.8 - OPCIÓN 5: SALIR DEL PROGRAMA
+OPCIÓN 7: SALIR DEL PROGRAMA
 ======================================================================================*/
         
         else if (opc == 7) {
             
-            /*------- 8.0 - Mensaje de salida y cambio de variable salir a true -------*/
+            /*------- Mensaje de salida y cambio de variable salir a true -------*/
             cout << "Saliendo..." << endl;
-            // Se transforma la variable salir en true, lo que provoca que el bucle while se rompa
-            // terminando el programa
+
+            //Cerramos el archivo del inventario
+            inventario.close();
+
+            // Se transforma la variable salir en true, lo que provoca que el bucle while se rompa terminando el programa
             salir = true;
         } 
 
@@ -365,7 +413,7 @@ int main() {
 ======================================================================================*/
         
         else {
-            /*------- 9.0 - Mensaje de alerta y vuelta al menú gracias al ciclo while -------*/
+            /*------- Mensaje de alerta y vuelta al menú gracias al ciclo while -------*/
             cout << "Opción no valida. Intenta de nuevo" << endl;
         }
         
